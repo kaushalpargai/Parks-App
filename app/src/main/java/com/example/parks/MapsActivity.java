@@ -3,7 +3,11 @@ package com.example.parks;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 
+import com.example.parks.data.AsyncResponse;
+import com.example.parks.data.Repository;
+import com.example.parks.model.Park;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -11,6 +15,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.parks.databinding.ActivityMapsBinding;
+
+import java.util.List;
+import java.util.Objects;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -42,12 +49,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        Repository.getParks(new AsyncResponse() {
+            @Override
+            public void processPark(List<Park> parks) {
+                for (Park park : parks){
+                    if(Objects.equals(park.getFullName(), "Abraham Lincoln Birthplace National Historical Park"))
+                    {
+
+                    LatLng sydney = new LatLng(Double.parseDouble(park.getLatitude())
+                            , Double.parseDouble(park.getLongitude()));
+                    mMap.addMarker(new MarkerOptions().position(sydney).title(park.getFullName()));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));}
+                    Log.d("Parks", "processPark: " + park.getLongitude());
+
+                }
+            }
+        });
 
         // Add a marker in Sydney and move the camera
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34.858, 151.211);
-        mMap.addMarker(new MarkerOptions().position(sydney).title(" Maker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 3));
+
+
+
 
     }
 }
