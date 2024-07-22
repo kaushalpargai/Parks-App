@@ -1,9 +1,12 @@
 package com.example.parks;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import com.example.parks.data.AsyncResponse;
 import com.example.parks.data.Repository;
@@ -15,6 +18,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.parks.databinding.ActivityMapsBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,10 +36,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        BottomNavigationView bottomNavigationMenuView = findViewById(R.id.bottom_navigation);
+        bottomNavigationMenuView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) item -> {
+            Fragment selectedFragment = null;
+
+            int id = item.getItemId();
+            if (id == R.id.maps_nav_button){
+                // show the map view
+                mMap.clear();
+                getSupportFragmentManager().beginTransaction().replace(R.id.map , mapFragment).commit();
+               mapFragment.getMapAsync(this);
+                return true;
+
+            }else if(id == R.id.parks_nav_button){
+                selectedFragment = new ParksFragment();
+
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.map,selectedFragment).commit();
+
+            return true;
+
+
+        });
     }
 
     /**
