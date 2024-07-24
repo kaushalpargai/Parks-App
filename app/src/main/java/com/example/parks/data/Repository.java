@@ -3,6 +3,7 @@ package com.example.parks.data;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.parks.controller.AppController;
+import com.example.parks.model.Images;
 import com.example.parks.model.Park;
 import com.example.parks.util.Util;
 
@@ -26,6 +27,23 @@ public class Repository {
                     park.setFullName(jsonObject.getString("fullName"));
                     park.setLatitude(jsonObject.getString("latitude"));
                     park.setLongitude(jsonObject.getString("longitude"));
+                    park.setParkCode(jsonObject.getString("parkCode"));
+                    park.setStates(jsonObject.getString("states"));
+                    JSONArray imageList = jsonObject.getJSONArray("images");
+                    List<Images> list = new ArrayList<>();
+                    for (int j = 0; j < imageList.length(); j++) {
+                        Images images = new Images();
+                        images.setCredit(imageList.getJSONObject(j).getString("credit"));
+                        images.setTitle(imageList.getJSONObject(j).getString("title"));
+                        images.setUrl(imageList.getJSONObject(j).getString("url"));
+                        list.add(images);
+
+                    }
+                    park.setImages(list);
+                    park.setWeatherInfo(jsonObject.getString("weatherInfo"));
+                    park.setName(jsonObject.getString("name"));
+                    park.setDesignation(jsonObject.getString("designation"));
+
                     parkList.add(park);
                     
                 }
