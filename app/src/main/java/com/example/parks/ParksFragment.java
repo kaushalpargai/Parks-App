@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,14 +19,17 @@ import com.example.parks.adapter.ParkRecyclerViewAdapter;
 import com.example.parks.data.AsyncResponse;
 import com.example.parks.data.Repository;
 import com.example.parks.model.Park;
+import com.example.parks.model.ParkViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class ParksFragment extends Fragment implements OnParkClickListener {
+public class    ParksFragment extends Fragment implements OnParkClickListener {
     private RecyclerView recyclerView;
     private ParkRecyclerViewAdapter parkRecyclerViewAdapter;
     private List<Park> parkList;
+    private ParkViewModel parkViewModel;
 
     // TODO: Rename parameter arguments, choose names that match
 
@@ -46,6 +50,7 @@ public class ParksFragment extends Fragment implements OnParkClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        parkList = new ArrayList<>();
     }
 
     @Override
@@ -61,19 +66,29 @@ public class ParksFragment extends Fragment implements OnParkClickListener {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Repository.getParks(new AsyncResponse() {
-            @Override
-            public void processPark(List<Park> parks) {
-                parkRecyclerViewAdapter = new ParkRecyclerViewAdapter(parks,ParksFragment.this);
-                recyclerView.setAdapter(parkRecyclerViewAdapter);
-            }
-        });
+
+        parkViewModel = new ViewModelProvider(requireActivity())
+                .get(ParkViewModel.class);
+
+        if (parkViewModel.getParks().getValue() !=null){
+            parkList = parkViewModel.getParks().getValue();
+            parkRecyclerViewAdapter = new ParkRecyclerViewAdapter(parkList,ParksFragment.this);
+            recyclerView.setAdapter(parkRecyclerViewAdapter);
+
+        }
+//        Repository.getParks(new AsyncResponse() {
+//            @Override
+//            public void processPark(List<Park> parks) {
+
+//            }
+//        });
 
     }
 
     @Override
     public void onParkClicked(Park park) {
         Log.d("Park", "onParkClicked: " + park.getName());
+        parkViewModel.selectPark(apark);
         getFragmentManager().beginTransaction()
                 .replace(R.id.park_fragment, DetailsFragment.newInstance())
                 .commit();

@@ -16,14 +16,17 @@ public class ParkViewModel extends ViewModel {
     public LiveData<Park> getSelectedPark() {
         return selectedPark;
     }
+
     public void selectPark(Park park) {
         selectedPark.setValue(park);
     }
-    public LiveData<List<Park>> getParks() { return  selectedParks; }
+
     public void setSelectedParks(List<Park> parks) {
         selectedParks.setValue(parks);
 
     }
+    public LiveData<List<Park>> getParks() { return  selectedParks; }
+
 
 
 }

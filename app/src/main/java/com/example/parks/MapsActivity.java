@@ -3,6 +3,7 @@ package com.example.parks;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import com.example.parks.data.AsyncResponse;
 import com.example.parks.data.Repository;
 import com.example.parks.model.Park;
+import com.example.parks.model.ParkViewModel;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,6 +23,7 @@ import com.example.parks.databinding.ActivityMapsBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,6 +31,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    private ParkViewModel parkViewModel;
+    private List<Park> parkList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        parkViewModel = new ViewModelProvider(this)
+                .get(ParkViewModel.class);
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -78,9 +85,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        parkList = new ArrayList<>();
+        parkList.clear();
         Repository.getParks(new AsyncResponse() {
             @Override
             public void processPark(List<Park> parks) {
+
+                parkList = parks;
                 for (Park park : parks){
                     if(Objects.equals(park.getFullName(), "Abraham Lincoln Birthplace National Historical Park"))
                     {
@@ -92,6 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Log.d("Parks", "processPark: " + park.getLongitude());
 
                 }
+                parkViewModel.setSelectedParks(parkList);
             }
         });
 
