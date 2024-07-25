@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.parks.adapter.OnParkClickListener;
 import com.example.parks.adapter.ParkRecyclerViewAdapter;
 import com.example.parks.data.AsyncResponse;
 import com.example.parks.data.Repository;
@@ -20,7 +22,7 @@ import com.example.parks.model.Park;
 import java.util.List;
 
 
-public class ParksFragment extends Fragment {
+public class ParksFragment extends Fragment implements OnParkClickListener {
     private RecyclerView recyclerView;
     private ParkRecyclerViewAdapter parkRecyclerViewAdapter;
     private List<Park> parkList;
@@ -62,10 +64,19 @@ public class ParksFragment extends Fragment {
         Repository.getParks(new AsyncResponse() {
             @Override
             public void processPark(List<Park> parks) {
-                parkRecyclerViewAdapter = new ParkRecyclerViewAdapter(parks);
+                parkRecyclerViewAdapter = new ParkRecyclerViewAdapter(parks,ParksFragment.this);
                 recyclerView.setAdapter(parkRecyclerViewAdapter);
             }
         });
+
+    }
+
+    @Override
+    public void onParkClicked(Park park) {
+        Log.d("Park", "onParkClicked: " + park.getName());
+        getFragmentManager().beginTransaction()
+                .replace(R.id.park_fragment, DetailsFragment.newInstance())
+                .commit();
 
     }
 }

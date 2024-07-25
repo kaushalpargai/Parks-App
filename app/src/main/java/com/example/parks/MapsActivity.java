@@ -88,7 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     LatLng sydney = new LatLng(Double.parseDouble(park.getLatitude())
                             , Double.parseDouble(park.getLongitude()));
                     mMap.addMarker(new MarkerOptions().position(sydney).title(park.getFullName()));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));}
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,5));}
                     Log.d("Parks", "processPark: " + park.getLongitude());
 
                 }
