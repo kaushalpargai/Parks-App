@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class    ParksFragment extends Fragment implements OnParkClickListener {
+public class ParksFragment extends Fragment implements OnParkClickListener {
     private RecyclerView recyclerView;
     private ParkRecyclerViewAdapter parkRecyclerViewAdapter;
     private List<Park> parkList;
