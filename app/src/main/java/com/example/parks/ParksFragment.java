@@ -52,7 +52,7 @@ public class    ParksFragment extends Fragment implements OnParkClickListener {
         super.onCreate(savedInstanceState);
         parkList = new ArrayList<>();
     }
-
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,10 +85,11 @@ public class    ParksFragment extends Fragment implements OnParkClickListener {
 
     }
 
+
     @Override
     public void onParkClicked(Park park) {
         Log.d("Park", "onParkClicked: " + park.getName());
-        parkViewModel.selectPark(apark);
+        parkViewModel.selectPark(park);
         getFragmentManager().beginTransaction()
                 .replace(R.id.park_fragment, DetailsFragment.newInstance())
                 .commit();
