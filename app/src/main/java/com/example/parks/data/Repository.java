@@ -3,6 +3,7 @@ package com.example.parks.data;
 import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.parks.controller.AppController;
+import com.example.parks.model.Activities;
 import com.example.parks.model.Images;
 import com.example.parks.model.Park;
 import com.example.parks.util.Util;
@@ -25,6 +26,7 @@ public class Repository {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     park.setId(jsonObject.getString("id"));
                     park.setFullName(jsonObject.getString("fullName"));
+                    park.setDescription(jsonObject.getString("description"));
                     park.setLatitude(jsonObject.getString("latitude"));
                     park.setLongitude(jsonObject.getString("longitude"));
                     park.setParkCode(jsonObject.getString("parkCode"));
@@ -43,6 +45,18 @@ public class Repository {
                     park.setWeatherInfo(jsonObject.getString("weatherInfo"));
                     park.setName(jsonObject.getString("name"));
                     park.setDesignation(jsonObject.getString("designation"));
+
+                    //Setup Activities
+                    JSONArray activityArray  =  jsonObject.getJSONArray("activities");
+                    List<Activities>  activitiesList = new ArrayList<>();
+                    for (int j = 0; j < activityArray.length(); j++) {
+                        Activities activities = new Activities();
+                        activities.setId(activityArray.getJSONObject(j).getString("id"));
+                        activities.setName(activityArray.getJSONObject(j).getString("name"));
+
+                        activitiesList.add(activities);
+                    }
+                    park.setActivities(activitiesList);
 
                     parkList.add(park);
                     

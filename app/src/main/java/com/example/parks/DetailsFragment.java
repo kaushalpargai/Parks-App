@@ -50,10 +50,33 @@ public class DetailsFragment extends Fragment {
 
         parkViewModel = new ViewModelProvider(requireActivity())
                 .get(ParkViewModel.class);
+        TextView parkName = view.findViewById(R.id.details_park_name);
+        TextView parkDes = view.findViewById(R.id.details_park_designation);
+        TextView description = view.getRootView().findViewById(R.id.details_description);
+        TextView activities = view.getRootView().findViewById(R.id.details_activities);
+        TextView entranceFees = view.getRootView().findViewById(R.id.details_entrance_fees);
+        TextView opHours = view.getRootView().findViewById(R.id.details_operating_hours);
+        TextView detailsTopics = view.getRootView().findViewById(R.id.details_topic);
+        TextView directions = view.getRootView().findViewById(R.id.details_directions);
+
+
+
 //        TextView test = view.getRootView().findViewById(R.id.test);
         parkViewModel.getSelectedPark().observe(getViewLifecycleOwner(), new Observer<Park>() {
             @Override
             public void onChanged(Park park) {
+                parkName.setText(park.getName());
+                parkDes.setText(park.getDesignation());
+                description.setText(park.getDescription());
+
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 0; i < park.getActivities().size(); i++) {
+                    stringBuilder.append(park.getActivities().get(i).getName())
+                            .append(" | ");
+                    
+                }
+                activities.setText(stringBuilder);
+
                 viewPagerAdapter = new ViewPagerAdapter(park.getImages());
                 viewPager.setAdapter(viewPagerAdapter);
 //                test.setText(park.getName());
