@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_details"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@android:color/white"
     android:orientation="vertical"
     tools:context=".DetailsFragment">
@@ -11,7 +11,7 @@
     <ScrollView
         android:id="@+id/details_activit"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:padding="8dp">
 
         <LinearLayout
@@ -55,7 +55,7 @@
             <TextView
                 android:id="@+id/Activities"
                 android:layout_width="111dp"
-                android:layout_height="22dp"
+                android:layout_height="30dp"
                 android:text="@string/activities"
                 android:textStyle="bold" />
 
@@ -68,7 +68,7 @@
             <TextView
                 android:id="@+id/topics"
                 android:layout_width="64dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:text="@string/topics"
                 android:textStyle="bold" />
 
@@ -81,7 +81,7 @@
             <TextView
                 android:id="@+id/entrance_fees"
                 android:layout_width="110dp"
-                android:layout_height="22dp"
+                android:layout_height="30dp"
                 android:text="@string/entrance_fees"
                 android:textStyle="bold" />
 
@@ -94,27 +94,27 @@
             <TextView
                 android:id="@+id/operating_hours"
                 android:layout_width="114dp"
-                android:layout_height="22dp"
+                android:layout_height="30dp"
                 android:text="@string/operating_hours"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/details_operating_hours"
-                android:layout_width="73dp"
-                android:layout_height="105dp"
+                android:layout_width="99dp"
+                android:layout_height="wrap_content"
                 android:text="TextView" />
 
             <TextView
                 android:id="@+id/directions"
                 android:layout_width="113dp"
-                android:layout_height="22dp"
+                android:layout_height="30dp"
                 android:text="@string/directions"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/details_directions"
                 android:layout_width="match_parent"
-                android:layout_height="113dp"
+                android:layout_height="181dp"
                 android:text="TextView" />
         </LinearLayout>
     </ScrollView>

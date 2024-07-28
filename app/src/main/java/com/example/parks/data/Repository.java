@@ -4,8 +4,12 @@ import com.android.volley.Request;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.parks.controller.AppController;
 import com.example.parks.model.Activities;
+import com.example.parks.model.EntranceFees;
 import com.example.parks.model.Images;
+import com.example.parks.model.OperatingHours;
 import com.example.parks.model.Park;
+import com.example.parks.model.StandardHours;
+import com.example.parks.model.Topics;
 import com.example.parks.util.Util;
 
 import org.json.JSONArray;
@@ -57,6 +61,71 @@ public class Repository {
                         activitiesList.add(activities);
                     }
                     park.setActivities(activitiesList);
+
+                    // Setup Topics
+
+                    JSONArray topicsArray = jsonObject.getJSONArray("topics");
+                    List<Topics> topicsList = new ArrayList<>();
+                    for (int j = 0; j < topicsArray.length(); j++) {
+                        Topics topics = new Topics();
+                        topics.setId(topicsArray.getJSONObject(j).getString("id"));
+                        topics.setName(topicsArray.getJSONObject(j).getString("name"));
+                        topicsList.add(topics);
+
+
+                    }
+
+                    park.setTopics(topicsList);
+
+                    // Operating Hours
+
+                    JSONArray operatingHoursArray = jsonObject.getJSONArray("operatingHours");
+                    List<OperatingHours> operatingHoursList = new ArrayList<>();
+                    for (int j = 0; j < operatingHoursArray.length(); j++) {
+                        OperatingHours operatingHours = new OperatingHours();
+                        operatingHours.setDescription(operatingHoursArray.getJSONObject(j).getString("description"));
+                        StandardHours standardHours = new StandardHours();
+                        JSONObject ophours = operatingHoursArray.getJSONObject(j).getJSONObject("standardHours");
+                        standardHours.setWednesday(ophours.getString("wednesday"));
+                        standardHours.setMonday(ophours.getString("monday"));
+                        standardHours.setThursday(ophours.getString("thursday"));
+                        standardHours.setSunday(ophours.getString("sunday"));
+                        standardHours.setTuesday(ophours.getString("tuesday"));
+                        standardHours.setFriday(ophours.getString("friday"));
+                        standardHours.setSaturday(ophours.getString("saturday"));
+                        operatingHours.setStandardHours(standardHours);
+
+                        operatingHoursList.add(operatingHours);
+
+
+
+
+                    }
+                    park.setOperatingHours(operatingHoursList);
+                    park.setDirectionsInfo(jsonObject.getString("directionsInfo"));
+
+                    // Entrance Fees
+//                    JSONArray efArray = jsonObject.getJSONArray("entranceFees");
+//                    List<EntranceFees> entranceFeesList = new ArrayList<>();
+//                    for (int j = 0; j < efArray.length(); j++) {
+//                        EntranceFees entranceFees = new EntranceFees();
+//                        if(efArray.length()>=3){
+//
+//                            entranceFees.setCost(efArray.getJSONObject(j).getString("cost)"));
+//                            entranceFees.setDescription(efArray.getJSONObject(j).getString("description"));
+//                            entranceFees.setTitle(efArray.getJSONObject(j).getString("title"));
+//                        }
+//
+//
+//                        entranceFeesList.add(entranceFees);
+//
+//
+//
+//
+//                    }
+//                    park.setEntranceFees(entranceFeesList);
+                    park.setWeatherInfo(jsonObject.getString("weatherInfo"));
+
 
                     parkList.add(park);
                     
