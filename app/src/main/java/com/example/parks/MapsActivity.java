@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.parks.adapter.CustomInfoWindow;
 import com.example.parks.data.AsyncResponse;
 import com.example.parks.data.Repository;
 import com.example.parks.model.Park;
@@ -17,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.parks.databinding.ActivityMapsBinding;
@@ -85,6 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setInfoWindowAdapter(new CustomInfoWindow(getApplicationContext()));
 
         parkList = new ArrayList<>();
         parkList.clear();
@@ -97,10 +100,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if(Objects.equals(park.getFullName(), "Abraham Lincoln Birthplace National Historical Park"))
                     {
 
-                    LatLng sydney = new LatLng(Double.parseDouble(park.getLatitude())
+                    LatLng location = new LatLng(Double.parseDouble(park.getLatitude())
                             , Double.parseDouble(park.getLongitude()));
-                    mMap.addMarker(new MarkerOptions().position(sydney).title(park.getFullName()));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney,5));}
+
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .position(location)
+                            .title(park.getName())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                            .snippet(park.getStates());
+
+                    mMap.addMarker(markerOptions);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,5));}
                     Log.d("Parks", "processPark: " + park.getLongitude());
 
                 }
