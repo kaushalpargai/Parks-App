@@ -20,6 +20,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.parks.databinding.ActivityMapsBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
@@ -29,7 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback ,
+        GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
@@ -88,6 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setInfoWindowAdapter(new CustomInfoWindow(getApplicationContext()));
+        mMap.setOnInfoWindowClickListener(this);
 
         parkList = new ArrayList<>();
         parkList.clear();
@@ -108,8 +111,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             .title(park.getName())
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
                             .snippet(park.getStates());
+                    Marker marker = mMap.addMarker(markerOptions);
+                    marker.setTag(park);
 
-                    mMap.addMarker(markerOptions);
+// as we have set the marker above so now no need to set it another time
+//                    mMap.addMarker(markerOptions);
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,5));}
                     Log.d("Parks", "processPark: " + park.getLongitude());
 
@@ -124,5 +130,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
+    }
+
+    @Override
+    public void onInfoWindowClick(@NonNull Marker marker) {
+        // go to details fragment
+        goToDetailsFragment(marker);
+
+
+    }
+
+    private void goToDetailsFragment(@NonNull Marker marker) {
+        parkViewModel.selectPark((Park) marker.getTag());
+        getSupportFragmentManager().beginTransaction().replace(R.id.map , DetailsFragment.newInstance()).commit();
     }
 }
