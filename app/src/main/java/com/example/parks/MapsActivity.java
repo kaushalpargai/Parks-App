@@ -1,13 +1,18 @@
 package com.example.parks;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.parks.adapter.CustomInfoWindow;
 import com.example.parks.data.AsyncResponse;
@@ -37,6 +42,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ActivityMapsBinding binding;
     private ParkViewModel parkViewModel;
     private List<Park> parkList;
+    private CardView cardView;
+    private EditText stateCodeEt;
+    private ImageButton searchButton;
+    private String code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        cardView = findViewById(R.id.card_view);
+        stateCodeEt = findViewById(R.id.floating_state_value_et);
+        searchButton = findViewById(R.id.floating_search_button);
+
 
         BottomNavigationView bottomNavigationMenuView = findViewById(R.id.bottom_navigation);
         bottomNavigationMenuView.setOnNavigationItemSelectedListener((BottomNavigationView.OnNavigationItemSelectedListener) item -> {
@@ -75,6 +89,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         });
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                parkList.clear();
+                String stateCode = stateCodeEt.getText().toString().trim();
+                if(!TextUtils.isEmpty(stateCode)){
+                    code = stateCode;
+                    parkViewModel.selectCode(code);
+                    onMapReady(mMap);
+                    stateCodeEt.setText("");
+                }
+            }
+        });
+
+
     }
 
     /**
@@ -100,8 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 parkList = parks;
                 for (Park park : parks){
-                    if(Objects.equals(park.getFullName(), "Abraham Lincoln Birthplace National Historical Park"))
-                    {
+
 
                     LatLng location = new LatLng(Double.parseDouble(park.getLatitude())
                             , Double.parseDouble(park.getLongitude()));
@@ -109,14 +138,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     MarkerOptions markerOptions = new MarkerOptions()
                             .position(location)
                             .title(park.getName())
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE))
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
                             .snippet(park.getStates());
                     Marker marker = mMap.addMarker(markerOptions);
                     marker.setTag(park);
 
 // as we have set the marker above so now no need to set it another time
 //                    mMap.addMarker(markerOptions);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,5));}
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location,5));
                     Log.d("Parks", "processPark: " + park.getLongitude());
 
                 }
