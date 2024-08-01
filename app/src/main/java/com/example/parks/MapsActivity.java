@@ -19,6 +19,7 @@ import com.example.parks.data.AsyncResponse;
 import com.example.parks.data.Repository;
 import com.example.parks.model.Park;
 import com.example.parks.model.ParkViewModel;
+import com.example.parks.util.Util;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -73,6 +74,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             int id = item.getItemId();
             if (id == R.id.maps_nav_button){
+                if (cardView.getVisibility() == View.INVISIBLE ||
+                cardView.getVisibility() == View.GONE){
+                    cardView.setVisibility(View.VISIBLE);
+                }
+                parkList.clear();
                 // show the map view
                 mMap.clear();
                 getSupportFragmentManager().beginTransaction().replace(R.id.map , mapFragment).commit();
@@ -81,6 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }else if(id == R.id.parks_nav_button){
                 selectedFragment = new ParksFragment();
+                cardView.setVisibility(View.GONE);
 
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.map,selectedFragment).commit();
@@ -92,8 +99,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 parkList.clear();
+                Util.hideSoftKeyboard(view);
                 String stateCode = stateCodeEt.getText().toString().trim();
                 if(!TextUtils.isEmpty(stateCode)){
                     code = stateCode;
@@ -172,6 +180,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(@NonNull Marker marker) {
+        cardView.setVisibility(View.GONE);
         // go to details fragment
         goToDetailsFragment(marker);
 
