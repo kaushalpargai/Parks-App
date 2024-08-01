@@ -136,6 +136,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void populateMap() {
+        mMap.clear(); // important Clears the map!!
         Repository.getParks(new AsyncResponse() {
             @Override
             public void processPark(List<Park> parks) {
@@ -162,7 +163,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }
                 parkViewModel.setSelectedParks(parkList);
-//                Log.d("Size", "populateMap: " +parkList.size());
+                Log.d("Size", "populateMap: " +parkList.size());
 
             }
         },code);
