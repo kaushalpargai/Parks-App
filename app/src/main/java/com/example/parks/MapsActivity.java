@@ -45,7 +45,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private CardView cardView;
     private EditText stateCodeEt;
     private ImageButton searchButton;
-    private String code;
+    private String code = "hi";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +98,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if(!TextUtils.isEmpty(stateCode)){
                     code = stateCode;
                     parkViewModel.selectCode(code);
-                    onMapReady(mMap);
+                    onMapReady(mMap); // refresh the map
                     stateCodeEt.setText("");
                 }
             }
@@ -124,6 +124,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         parkList = new ArrayList<>();
         parkList.clear();
+
+        populateMap();
+
+        // Add a marker in Sydney and move the camera
+        // Add a marker in Sydney and move the camera
+
+
+
+
+    }
+
+    private void populateMap() {
         Repository.getParks(new AsyncResponse() {
             @Override
             public void processPark(List<Park> parks) {
@@ -150,14 +162,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 }
                 parkViewModel.setSelectedParks(parkList);
+//                Log.d("Size", "populateMap: " +parkList.size());
+
             }
-        });
-
-        // Add a marker in Sydney and move the camera
-        // Add a marker in Sydney and move the camera
-
-
-
+        },code);
 
     }
 
